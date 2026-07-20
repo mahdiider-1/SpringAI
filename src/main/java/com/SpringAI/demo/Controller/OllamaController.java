@@ -2,6 +2,7 @@ package com.SpringAI.demo.Controller;
 
 
 import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.ai.chat.memory.ChatMemory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,7 +20,14 @@ public class OllamaController {
     @GetMapping("api/{message}")
     public String getAnswer(@PathVariable String message){
 
-        return chatClient.prompt(message).call().content();
+        return chatClient
+                .prompt(message)
+                .advisors(a-> a.param(
+                        ChatMemory.CONVERSATION_ID,
+                        "user-1"
+                ))
+                .call()
+                .content();
 
     }
 
